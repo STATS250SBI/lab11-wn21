@@ -1,0 +1,159 @@
+---
+title: "STATS 250 Lab 11 Report"
+author: "YOUR NAME GOES HERE IN QUOTES"
+date: "TODAY'S DATE GOES HERE IN QUOTES"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_collapsed: true
+    theme: lumen
+    css: assets/styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("plot_t.R") # This imports the plot_t() function
+```
+
+# Instructions
+
+Welcome to Lab 11! Complete the following exercises designed to help you understand the simulation process for making inference about a population proportion. It is important that you keep your answers inside the ".answer" blocks. Do NOT delete the three colon blocks (:::) and keep your responses between them. Use the tutorial for help, and feel free to ask questions on Piazza or email your lab instructor.
+
+Depending on your instruction method (synchronous or asynchronous), complete the following exercises collaboratively.
+
+1. **Synchronous remote:** Work with your peers in breakout rooms during the synchronous lab.
+1. **Asynchronous remote:** Use Piazza for asynchronous collaboration.
+
+**Collaborators:** If applicable, replace this text with the names of anyone you collaborated with on this project.
+
+**NOTE:** If you perform a calculation in R and assign it a name but do not print the value in your knitted document, we reserve the right to deduct points.
+
+# Background
+
+:::{.background}
+In 2004, the state of North Carolina released a large data set containing information on births recorded in this state. This data set is useful to researchers studying relationships between habits and practices of expectant mothers and the birth of their children. We will work with a random sample of observations from this data set.
+:::
+
+```{r readData}
+births <- read.csv("births.csv", stringsAsFactors = T)
+```
+
+# Lab Assignment
+
+## Question 1
+:::{.question}
+Perform a linear regression of the infant's birthweight in pounds (the `weight` variable) on the weight in pounds gained by the mother during pregnancy (`gained`). Store the regression model as a variable and use R to summarize the results.
+:::
+
+:::{.answer}
+```{r question1, error = T}
+# Replace this comment with code required for Question 1. (Remember that this text is a comment, so R ignores it; you can delete it if you want.) If you don't delete it, **start your code on a new line that doesn't start with #**
+
+```
+:::
+
+## Question 2
+:::{.question}
+Write the equation of the estimated linear regression line.
+:::
+
+:::{.answer}
+Replace this text with your answer to Question 2.
+
+:::
+
+
+## Question 3
+:::{.question}
+Check the conditions necessary to ensure that the estimated regression line is in fact the line of best fit. Comment on whether each condition is satisfied.
+:::
+
+:::{.answer}
+```{r question3, error = T}
+# Replace this comment with code required for Question 3. (Remember that this text is a comment, so R ignores it; you can delete it if you want.) 
+
+```
+
+Replace this text with your comments on each condition.
+
+:::
+
+## Question 4
+
+:::{.question}
+Write hypotheses to address the question of whether weight gained during pregnancy has a linear association with infant birthweight. You may use the linear regression model output. Your hypotheses should be formulated mathematically, in terms of a parameter.
+:::
+  
+:::{.answer}
+$H_0$: replace this text with your null hypothesis
+
+$H_a$: replace this text with your alternative hypothesis
+:::
+
+## Question 5
+:::{.question}
+Use your R output from Question 1 to perform the hypothesis test you set up in Question 4. Do not write new code. Report the test statistic and p-value.
+:::
+
+:::{.answer}
+- The test statistic is **test statistic goes here**
+- The p-value is **p-value goes here**
+:::
+
+## Question 6
+:::{.question}
+Create an appropriate visualization of your test statistic and p-value from Question 5.
+:::
+
+:::{.answer}
+```{r question6, error = T}
+# Replace this comment with code required for Question 3. (Remember that this text is a comment, so R ignores it; you can delete it if you want.) 
+
+```
+:::
+
+## Question 7
+:::{.question}
+Use R to compute a 90% confidence interval for $\beta_1$, the population slope.
+:::
+
+:::{.answer}
+```{r question7, error = T}
+# Replace this comment with code required for Question 7. (Remember that this text is a comment, so R ignores it; you can delete it if you want.) If you don't delete it, **start your code on a new line that doesn't start with #**
+
+```
+:::
+
+## Question 8
+:::{.question}
+In Question 5, we found that we have extremely strong evidence to say that the population slope is not zero. If we changed the alternative hypothesis to $\beta_1 > 0$, what would be the p-value for our test?
+:::
+
+:::{.answer}
+Replace this text with your written answer for Question 8.
+
+:::
+
+
+## Wrap-Up and Submission
+
+At the top of the document, make sure you've changed the `author` field to your name (in quotes!). If you'd like, change the date as well.
+
+**When you've finished the lab, click the Knit button one last time.**
+
+
+### Submission instructions
+#### If you're using RStudio Cloud
+1. In the Files pane, check the box next to `lab11report.html`.
+2. Click More > Export...
+3. Click Download and save the file on your computer in a folder you'll remember and be able to find later. You can just call the file `lab11report.html` or whatever else you'd like (as long as you remember what you called it).
+
+#### If you're using RStudio installed on your computer
+1. locate the `lab11report.html` file on your computer. The file will be saved in the location indicated at the top of the files pane.
+
+#### Submission to Canvas
+
+1. Click the "Assignments" panel on the left side of the page. Scroll to find "Lab 11", and open the assignment. Click "Submit Assignment". 
+2. Towards the bottom of the page, you'll be able to choose `lab11report.html` from the folder you saved it in from RStudio Cloud or noted if you're using RStudio Desktop. **You will only be able to upload a .html file -- do not upload any other file type.**
+  3. Click "Submit Assignment". You're done! 

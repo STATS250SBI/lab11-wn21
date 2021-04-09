@@ -1,0 +1,235 @@
+---
+title: "STATS 250 Lab 11"
+author: "Lab Dream Team"
+date: "Week of 4/12/2021"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_collapsed: true
+    theme: lumen
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(checkmate))
+  install.packages('checkmate')
+source("plot_t.R")
+```
+
+# Learning Objectives
+
+## Statistical Learning Objectives
+1. Learn about how to make inference about linear regression parameters
+1. Learn about checking conditions for valid inference in linear regression
+
+## R Learning Objectives
+1. Learn how to perform a paired $t$ test in R.
+1. Interpret output from `lm()` to make linear regression inference
+1. Use R to check conditions for valid inference in linear regression
+
+## Functions covered in this lab
+1. `t.test()`
+1. `lm()`
+1. `qqnorm()`
+1. `qqline()`
+1. `confint()`
+
+# Lab Demo
+
+## Paired $t$ Tests
+
+We'll start by closing the loop on last week's lab and discussing how to perform a paired $t$-test in R. Let's do this using the births data we worked with in Lab 10.
+
+```{r birthsData}
+births <- read.csv("births.csv", stringsAsFactors = TRUE)
+```
+
+Remember Question 8 on Lab 10:
+> Now consider that the researchers wish to analyze the average age difference for the mother and the father of a child. The data was collected such that for each child born in North Carolina in 2004, both the mother's age and the father's age are reported, then a random sample of these children is taken to report the data. Do you think these two sets of information meet both conditions of independence? Why or why not?
+
+The between-group independence condition here is not met -- it's not reasonable to think that a child's mother's and father's ages are independent. So, we're going to **pair** these observations.
+
+To do this, we're going to create a new variable in the `births` data frame called `diff`, and assign it the difference in ages (father's age minus mother's age). 
+
+```{r diffvar}
+births$diff <- births$fage - births$mage
+```
+
+Now, all we do is run `t.test()` on the `diff` variable:
+
+```{r paired-t}
+t.test(births$diff, mu = 0, alternative = "two.sided")
+```
+
+Alternatively, we can use the `paired` argument to `t.test()`, passing *two* arguments with data:
+
+```{r paired-t2}
+t.test(x = births$fage, y = births$mage, paired = TRUE,
+       mu = 0, alternative = "two.sided")
+```
+
+Be careful here: R's wording in the statement of the alternative hypothesis is *WRONG*. It should say "true mean of differences is not equal to 0". Don't let their wording confuse you!
+
+## Recap: Linear Regression
+
+Let's remind ourselves of how to perform linear regression in R. Remember that in Lab 4 (yeah, that was a while ago, we know) we explored linear regression using the penguins data. Specifically, we looked at the linear relationship between body mass and bill length. This time, we're going to look at the relationship between body mass and *flipper* length.
+
+```{r penguins}
+penguins <- read.csv("penguins.csv", stringsAsFactors = TRUE)
+```
+
+Let's start by making a scatterplot. Remember that we're going to use **formula notation**: `response variable ~ explanatory variable`.
+
+```{r}
+plot(body_mass_g ~ flipper_length_mm,
+     data = penguins,
+     ylab = "Body Mass (g)", xlab = "Flipper Length (mm)",
+     main = "Penguin Body Mass vs. Flipper Length")
+```
+
+Recall that to fit a linear regression model, we use the `lm()` function. We store the results as `mod1` so that we can refer to it later (most commonly in the `summary()` function). We will regress *body mass* **on** *flipper length* so that body mass is the response variable and 
+
+```{r reg1}
+mod1 <- lm(body_mass_g ~ flipper_length_mm, data = penguins)
+summary(mod1)
+```
+
+**Replace this text with the equation of the regression line.**
+
+**Fill in the blanks:** We estimate that a one-millimeter longer flipper is associated with a ________-gram ___ higher/lower ___ body mass, on average, in the population of penguins represented by this sample.
+
+## Regression Diagnostics
+
+There are **four** conditions under which the simple linear regression line is the line of best fit:
+
+- **Linearity:** The relationship between the explanatory and response variables should be linear.
+- **Independence:** The observations must be independent of one another. This does not mean that the response and explanatory variables are independent; rather, that the "individuals" from whom we collect information must be independent of each other.
+- **Nearly Normal Residuals:** The residuals should come from a nearly-normal population of residuals.
+- **Equal (constant) variability:** The variability of the residuals should not depend on where they are along the regression line.
+
+We can check these conditions using **diagnostic plots**. To make these plots, we're going to use the fact that the `mod1` object we created contains a bunch of information about the model we fit. We can see what kind of information we have using the `names()` function (just like we'd do for a data frame!):
+
+```{r regnames}
+names(mod1)
+```
+
+We're particularly interested in two things here: `residuals` and `fitted.values` ($\hat{y}$). We'll start by making a plot of the residuals vs. the fitted values, and drawing a horizontal line at 0 using `abline()`.
+
+```{r residualplot}
+plot(mod1$residuals ~ mod1$fitted.values,
+     main = "Residuals vs. Fitted Values",
+     ylab = "Residuals",
+     xlab = "Fitted Values (body mass vs. flipper length)")
+abline(h = 0)
+```
+
+**What condition(s) do(es) this plot help us check?**
+
+**Replace this text with your thoughts about the residual vs. fitted values plot.**
+
+We can check the nearly normal condition using a QQ plot. Remember that the nearly normal condition applies to the *residuals*, so we need to make a QQ plot of the residuals. We'll do this using the `qqnorm()` and `qqline()` functions:
+
+```{r qqplot}
+qqnorm(mod1$residuals)
+qqline(mod1$residuals)
+```
+
+`qqnorm()` draws a QQ plot; `qqline()` adds the line that we want our points to approximately line up with.
+
+**Replace this text with your thoughts about the QQ plot.**
+
+
+## Inference for Linear Regression Parameters
+
+Let's go back to that `lm()` output:
+
+```{r lmOut}
+summary(mod1)
+```
+
+Let's say we want to know if, at the population level, there's a linear relationship between penguin flipper length and body mass. If there's no relationship, then $\beta_1$, the population slope, should be 0. So our hypotheses are
+$$H_0: \beta_1 = 0 \quad \text{vs.} \quad H_a: \beta_1 \neq 0.$$
+Note that, since we didn't specify a direction, we're using a *two-sided* alternative.
+
+We can construct a t-statistic for this!
+$$ t = \frac{b_1 - b_{1, \text{null}}}{SE_{b_1}} = \frac{50.15 - 0}{1.54} = 32.56$$
+
+And the p-value? Remember the degrees of freedom are given by $n - 2$.
+
+```{r pValueVis}
+plot_t(df = 333 - 2, shadeValues = c(-32.56, 32.56), direction = "beyond")
+```
+
+```{r examplepval, error = T}
+# Replace this comment with code to compute the p-value.
+
+```
+
+**KEY IDEA:** R output gives you t-statistics and *two-sided* p-values for hypothesis tests about regression coefficients where the *null value is zero*.
+
+We can also easily create confidence intervals for the regression parameters using the `confint()` function. Remember that to construct a confidence interval for the slope, we'll use
+$$b_1 \pm t^* \times \mathrm{SE}_{b_1}$$
+(same idea for the intercept, just replace $b_1$ with $b_0$).
+
+We can quickly do this for both the intercept and slope using `confint()`:
+
+```{r confintDemo}
+confint(mod1, level = .95)
+```
+
+So a 95% confidence interval for the slope is (47.12, 53.18). **Exercise:** verify this using the regression output!
+
+## Recap: Plotting a Regression Line
+
+Let's go back to the scatterplot we made earlier:
+
+```{r}
+plot(body_mass_g ~ flipper_length_mm,
+     data = penguins,
+     ylab = "Body Mass (g)", xlab = "Flipper Length (mm)",
+     main = "Penguin Body Mass vs. Flipper Length")
+```
+
+We can plot the estimated regression line using `abline()`. Just pass it the regression model!
+
+```{r}
+plot(body_mass_g ~ flipper_length_mm,
+     data = penguins,
+     ylab = "Body Mass (g)", xlab = "Flipper Length (mm)",
+     main = "Penguin Body Mass vs. Flipper Length")
+abline(mod1, col = "tomato", lwd = 2)
+```
+
+## Code Cheat Sheet
+
+The formatting of this will be easier to read in the knitted version of the document.
+
+- **`lm(formula, data)`**
+  - `formula` is a symbolic description of the model you want to fit: recall the syntax is `response ~ explanatory`.
+  - `data` is a data frame which contains the variables used in `formula`.
+- **`pt(q, df, lower.tail = TRUE)`**
+  - `q` is the x-axis value you want to find an area related to
+  - `df` is the degrees of freedom of the $t$ distribution
+  - `lower.tail` determines whether `pt()` finds the area to the left or right of `q`. If `lower.tail = TRUE` (the default), it shades to the left. If `lower.tail = FALSE`, it shades to the right.
+- **`qt(q, df, lower.tail = TRUE)`**
+  - `p` is the probability or area under the curve you want to find an x-axis value for
+  - `df` is the degrees of freedom of the $t$ distribution
+  - `lower.tail` determines whether `pt()` finds the area to the left or right of `q`. If `lower.tail = TRUE` (the default), it shades to the left. If `lower.tail = FALSE`, it shades to the right.
+- **`plot_t()`**
+  - `df` refers to the degrees of freedom of the distribution to plot. You must provide this value.
+  - `shadeValues` is a vector of up to 2 numbers that define the region you want to shade
+  - `direction` can be one of `less`, `greater`, `beyond`, or `between`, and controls the direction of shading between `shadeValues`. Must be `less` or `greater` if `shadeValues` has only one element; `beyond` or `between` if two
+  - `col.shade` controls the color of the shaded region, defaults to `"cornflowerblue"`
+  - `...` lets you specify other graphical parameters to control the appearance of the normal curve (e.g., `lwd`, `lty`, `col`, etc.)
+- **`qqnorm(y, ...)`**
+  - `y` refers to the variable for which you want to create a Q-Q plot
+  - `...` lets you control graphical elements of the plot like `pch`, `col`, etc.
+- **`qqline(y, ...)`**
+  - `y` refers to the variable for which you created a Q-Q plot
+  - `...` lets you control graphical elements of the plot like `pch`, `col`, etc.
+  - Function can only be used *after* using `qqnorm()`
+- **`confint(object, level)`**
+  - `object` is a fitted regression model (an `lm` object)
+  - `level` is the required confidence level, must be between 0 and 1.
+
