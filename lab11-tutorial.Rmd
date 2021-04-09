@@ -73,7 +73,7 @@ Be careful here: R's wording in the statement of the alternative hypothesis is *
 
 ## Recap: Linear Regression
 
-Let's remind ourselves of how to perform linear regression in R. Remember that in Lab 4 (yeah, that was a while ago, we know) we explored linear regression using the penguins data. Specifically, we looked at the linear relationship between body mass and bill length. This time, we're going to look at the relationship between body mass and *flipper* length.
+Let's remind ourselves of how to perform linear regression in R. Remember that in Lab 4 (yeah, that was a while ago, we know) we explored linear regression using the penguins data. Specifically, we looked at the linear relationship between body mass and bill length. This time, we're going to look at the linear relationship between body mass and *flipper* length.
 
 ```{r penguins}
 penguins <- read.csv("penguins.csv", stringsAsFactors = TRUE)
