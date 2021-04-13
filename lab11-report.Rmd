@@ -82,7 +82,7 @@ Replace this text with your comments on each condition.
 ## Question 4
 
 :::{.question}
-Write hypotheses to address the question of whether weight gained during pregnancy has a linear association with infant birthweight. You may use the linear regression model output. Your hypotheses should be formulated mathematically, in terms of a parameter.
+Write hypotheses to address the question of whether weight gained during pregnancy has a linear association with infant birthweight. You may use the linear regression model output. Your hypotheses should be formulated mathematically, in terms of a parameter (i.e., in symbols).
 :::
   
 :::{.answer}
@@ -108,7 +108,7 @@ Create an appropriate visualization of your test statistic and p-value from Ques
 
 :::{.answer}
 ```{r question6, error = T}
-# Replace this comment with code required for Question 3. (Remember that this text is a comment, so R ignores it; you can delete it if you want.) 
+# Replace this comment with code required for Question 6. (Remember that this text is a comment, so R ignores it; you can delete it if you want.) 
 
 ```
 :::
