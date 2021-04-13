@@ -108,7 +108,7 @@ Create an appropriate visualization of your test statistic and p-value from Ques
 
 :::{.answer}
 ```{r question6, error = T}
-# Replace this comment with code required for Question 3. (Remember that this text is a comment, so R ignores it; you can delete it if you want.) 
+# Replace this comment with code required for Question 6. (Remember that this text is a comment, so R ignores it; you can delete it if you want.) 
 
 ```
 :::
